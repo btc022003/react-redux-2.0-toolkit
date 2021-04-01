@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { increment, asyncIncrement } from './store/features/counterSlice';
+import { loadData } from './store/features/movieSlice';
 
 function App() {
+  const { count } = useSelector((state) => state.counter);
+  const { list } = useSelector((state) => state.movie);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(loadData()); // 获取影片数据
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <button
+        onClick={() => {
+          dispatch(increment({ step: 2 }));
+        }}
+      >
+        {count}
+      </button>
+      <hr />
+      <button
+        onClick={() => {
+          dispatch(asyncIncrement({ step: 1 }));
+        }}
+      >
+        {count}
+      </button>
+      <hr />
+      <ul>
+        {list.map((item) => (
+          <li key={item.tvId}>{item.name}</li>
+        ))}
+      </ul>
     </div>
   );
 }
